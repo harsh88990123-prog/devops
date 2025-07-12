@@ -138,5 +138,20 @@
     "timeOfPost": {
       "$date": "2023-07-22T14:33:21.700Z"
     }
+  },
+{
+  "_id": {
+    "$oid": "653441167c11e03b70e91625"
+  },
+  "authorName": "Zaid Shabbir",
+  "title": "Karachi, The City of Lights",
+  "imageLink": "https://i.ibb.co/1t6W1Gr4/karachi.webp",
+  "categories": ["Travel", "City", "Landmarks"],
+  "description": "Experience the vibrant energy of Karachi, the City of Lights, where rich culture, coastal beauty, and unstoppable hustle define Pakistan’s largest metropolis.",
+  "isFeaturedPost": false,
+  "timeOfPost": {
+    "$date": "2025-09-11T14:33:21.700Z"
   }
+}
+
 ]
