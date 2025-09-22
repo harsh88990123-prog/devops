@@ -12,7 +12,7 @@ const REFRESH_COOKIE_MAXAGE = process.env.REFRESH_COOKIE_MAXAGE;
 
 const ACCESS_TOKEN_EXPIRES_IN: TokenExpiry = process.env.ACCESS_TOKEN_EXPIRES_IN as TokenExpiry;
 const REFRESH_TOKEN_EXPIRES_IN: TokenExpiry = process.env.REFRESH_TOKEN_EXPIRES_IN as TokenExpiry;
-const JWT_SECRET: string = process.env.JWT_SECRET ?? throwError('JWT_SECRET is not defined');
+const JWT_SECRET: string = process.env.JWT_SECRET ('JWT_SECRET is not defined');
 const FRONTEND_URL = process.env.FRONTEND_URL;
 const NODE_ENV = process.env.NODE_ENV;
 
