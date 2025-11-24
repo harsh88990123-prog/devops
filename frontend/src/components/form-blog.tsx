@@ -117,9 +117,8 @@ function FormBlog({ type, postId, post }: FormBlogPropType) {
       if (isAxiosError(error)) {
         navigate('/');
         userState.removeUser();
-        console.error(error.response?.data?.message);
       } else {
-        console.log(error);
+        // No console.log here
       }
     }
   };

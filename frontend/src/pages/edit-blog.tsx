@@ -21,8 +21,8 @@ const EditBlog = () => {
           setIsLoading(false);
           setPost(response.data);
         });
-      } catch (error) {
-        console.log(error);
+      } catch (error: any) {
+        // Error handled silently
       }
     };
     if (post === undefined || post !== state?.post) {

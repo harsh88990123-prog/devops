@@ -24,6 +24,9 @@ router.get(
   passport.authenticate('google', { failureRedirect: '/' }),
   (req: Request, res: Response) => {
     let token = '';
+    if (!req.user) {
+      return res.redirect(`${process.env.FRONTEND_URL}/signup?error=auth_failed`);
+    }
     if (process.env.JWT_SECRET) {
       token = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
     }
@@ -37,6 +40,13 @@ router.get(
 );
 
 router.get('/check', authMiddleware, (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({
+      success: false,
+      message: 'User not authenticated',
+    });
+  }
+
   const token = req.cookies.access_token;
   res.json({
     token,

@@ -2,7 +2,7 @@ import User from '../models/user.js';
 import jwt from 'jsonwebtoken';
 import { HTTP_STATUS, RESPONSE_MESSAGES } from '../utils/constants.js';
 import { cookieOptions } from '../utils/cookie_options.js';
-import { JWT_SECRET } from '../config/utils.js';
+import { JWT_SECRET, NODE_ENV } from '../config/utils.js';
 import { ApiError } from '../utils/api-error.js';
 import { ApiResponse } from '../utils/api-response.js';
 import { asyncHandler } from '../utils/async-handler.js';
@@ -162,11 +162,19 @@ export const signOutUser = asyncHandler(async (req: Request, res: Response, next
       );
     }
 
+    // Cookie options for clearing (without maxAge as it's deprecated)
+    const clearCookieOptions = {
+      httpOnly: true,
+      secure: NODE_ENV === 'production',
+      sameSite: NODE_ENV === 'Development' ? ('lax' as const) : ('none' as const),
+      path: '/',
+    };
+
     res
       .status(HTTP_STATUS.OK)
-      .clearCookie('access_token', cookieOptions)
-      .clearCookie('refresh_token', cookieOptions)
-      .clearCookie('jwt', cookieOptions)
+      .clearCookie('access_token', clearCookieOptions)
+      .clearCookie('refresh_token', clearCookieOptions)
+      .clearCookie('jwt', clearCookieOptions)
       .json(new ApiResponse(HTTP_STATUS.OK, '', RESPONSE_MESSAGES.USERS.SIGNED_OUT));
   });
 });

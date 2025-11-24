@@ -7,7 +7,7 @@ import { TSignInSchema, signInSchema } from '@/lib/types';
 import 'react-toastify/dist/ReactToastify.css';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-toastify';
-import { AxiosError, isAxiosError } from 'axios';
+import { AxiosError } from 'axios';
 import axiosInstance from '@/helpers/axios-instance';
 import userState from '@/utils/user-state';
 import ThemeToggle from '@/components/theme-toggle-button';
@@ -60,12 +60,8 @@ function signin() {
       });
 
       return (await response).data;
-    } catch (error) {
-      if (isAxiosError(error)) {
-        console.error(error.response?.data?.message);
-      } else {
-        console.error(error);
-      }
+    } catch (error: any) {
+      setError('root', { message: error.response?.data?.message || 'An error occurred' });
     }
   };
 
@@ -85,12 +81,10 @@ function signin() {
               toast.success('Successfully logged in with Google');
               toastShownRef.current = true;
             }
-          } else {
-            console.error('User data is incomplete:', user);
           }
           window.history.replaceState({}, document.title, window.location.pathname);
         } catch (error) {
-          console.error('Error handling Google login:', error);
+          // Error handled silently
           if (!toastShownRef.current) {
             toast.error('Failed to log in with Google');
             toastShownRef.current = true;

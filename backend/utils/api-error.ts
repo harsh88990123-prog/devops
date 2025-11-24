@@ -1,4 +1,4 @@
-import { Error as MongooseError } from 'mongoose';
+
 import { RESPONSE_MESSAGES } from './constants.js';
 
 interface ApiErrorParams {
@@ -8,7 +8,7 @@ interface ApiErrorParams {
   stack?: string;
 }
 
-class ApiError extends MongooseError {
+class ApiError extends Error {
   public status: number;
   public data: null;
   public success: boolean;

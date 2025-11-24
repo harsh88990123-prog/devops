@@ -48,8 +48,8 @@ export default function DetailsPage() {
         toast.success('Successfully post deleted!');
         navigate('/');
       }
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      // Error handled silently
       toast.error('something went wrong');
     }
   };
@@ -61,8 +61,8 @@ export default function DetailsPage() {
           setIsLoading(false);
           setPost(response.data);
         });
-      } catch (error) {
-        console.log(error);
+      } catch (error: any) {
+        // Error handled silently
       }
     };
     if (post === undefined || post !== state.post) {
@@ -152,20 +152,20 @@ export default function DetailsPage() {
           <div className="block space-y-4 sm:hidden">
             {relatedPostsLoading
               ? Array(3)
-                  .fill(0)
-                  .map((_, index) => <PostMobileViewCardSkeleton key={index} />)
+                .fill(0)
+                .map((_, index) => <PostMobileViewCardSkeleton key={index} />)
               : relatedCategoryPosts
-                  .slice(0, 3)
-                  .map((post) => <PostMobileViewComponent key={post._id} post={post} />)}
+                .slice(0, 3)
+                .map((post) => <PostMobileViewComponent key={post._id} post={post} />)}
           </div>
           <div className="hidden sm:flex sm:flex-wrap sm:p-3">
             {relatedPostsLoading
               ? Array(4)
-                  .fill(0)
-                  .map((_, index) => <PostCardSkeleton key={index} />)
+                .fill(0)
+                .map((_, index) => <PostCardSkeleton key={index} />)
               : relatedCategoryPosts
-                  .slice(0, 4)
-                  .map((post) => <PostCard key={post._id} post={post} />)}
+                .slice(0, 4)
+                .map((post) => <PostCard key={post._id} post={post} />)}
           </div>
         </div>
       </div>

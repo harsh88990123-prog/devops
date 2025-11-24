@@ -9,11 +9,13 @@ import { Request, Response, NextFunction } from 'express';
 import { ObjectId } from 'mongoose';
 
 interface JwtPayload {
-  id: ObjectId;
+  id?: ObjectId;
+  _id?: string;
 }
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-  const token = await req.cookies.access_token;
+  const token = req.cookies.access_token;
+
   if (!token) {
     return next(
       new ApiError({
@@ -24,11 +26,32 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
   }
 
   try {
-    const { id } = jwt.verify(token, JWT_SECRET as string) as JwtPayload;
-    req.user = await User.findById(id);
+    const decoded = jwt.verify(token, JWT_SECRET as string) as JwtPayload;
+    const userId = decoded.id || decoded._id;
+
+    if (!userId) {
+      return next(
+        new ApiError({
+          status: HTTP_STATUS.UNAUTHORIZED,
+          message: RESPONSE_MESSAGES.USERS.INVALID_TOKEN,
+        })
+      );
+    }
+
+    req.user = await User.findById(userId);
+
+    if (!req.user) {
+      return next(
+        new ApiError({
+          status: HTTP_STATUS.UNAUTHORIZED,
+          message: RESPONSE_MESSAGES.USERS.USER_NOT_EXISTS,
+        })
+      );
+    }
+
     next();
   } catch (error: any) {
-    console.log('Token verification error:', error);
+    console.error('[Auth Error]', error.message);
     return next(
       new ApiError({
         status: HTTP_STATUS.FORBIDDEN,

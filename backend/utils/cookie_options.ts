@@ -5,6 +5,7 @@ interface CookieObject {
   sameSite: 'lax' | 'strict' | 'none';
   secure: boolean;
   maxAge: number;
+  path: string;
 }
 const maxAge =
   typeof ACCESS_COOKIE_MAXAGE === 'string' ? parseInt(ACCESS_COOKIE_MAXAGE, 10) : defaultMaxAge;
@@ -15,4 +16,5 @@ export const cookieOptions: CookieObject = {
   sameSite: NODE_ENV === 'Development' ? 'lax' : 'none',
   secure: NODE_ENV === 'Development' ? false : true,
   maxAge: validMaxAge,
+  path: '/',
 };
