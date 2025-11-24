@@ -17,39 +17,42 @@ import useThemeClass from './utils/theme-changer';
 import AdminContainer from './components/admin-container';
 import { Role } from './types/role-type.tsx';
 import EditBlog from './pages/edit-blog.tsx';
+import ErrorBoundary from './components/ErrorBoundary';
 
 function App() {
   useLayoutEffect(() => {
     useThemeClass();
   }, []);
   return (
-    <BrowserRouter>
-      <ScrollToTop />
-      <div className="flex min-h-screen flex-col">
-        <Routes>
-          <Route path="/">
-            <Route index element={<HomePage />} />
-            <Route path="details-page/:title/:postId" element={<DetailsPage />} />
-            <Route element={<UnprotectedRoute />}>
-              <Route path="signin" element={<SignIn />} />
-              <Route path="signup" element={<SignUp />} />
-            </Route>
-            <Route element={<RequireAuthBlog allowedRole={[Role.Admin, Role.User]} />}>
-              <Route path="add-blog" element={<AddBlog />} />
-              <Route path="edit-blog/:postId" element={<EditBlog />} />
-            </Route>
-            <Route path="admin" element={<RequireAuth allowedRole={[Role.Admin]} />}>
-              <Route element={<AdminContainer />}>
-                <Route path="users" element={<AdminUsers />} />
-                <Route path="blogs" element={<AdminBlogs />} />
+    <ErrorBoundary>
+      <BrowserRouter>
+        <ScrollToTop />
+        <div className="flex min-h-screen flex-col">
+          <Routes>
+            <Route path="/">
+              <Route index element={<HomePage />} />
+              <Route path="details-page/:title/:postId" element={<DetailsPage />} />
+              <Route element={<UnprotectedRoute />}>
+                <Route path="signin" element={<SignIn />} />
+                <Route path="signup" element={<SignUp />} />
+              </Route>
+              <Route element={<RequireAuthBlog allowedRole={[Role.Admin, Role.User]} />}>
+                <Route path="add-blog" element={<AddBlog />} />
+                <Route path="edit-blog/:postId" element={<EditBlog />} />
+              </Route>
+              <Route path="admin" element={<RequireAuth allowedRole={[Role.Admin]} />}>
+                <Route element={<AdminContainer />}>
+                  <Route path="users" element={<AdminUsers />} />
+                  <Route path="blogs" element={<AdminBlogs />} />
+                </Route>
               </Route>
             </Route>
-          </Route>
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-        <Footer />
-      </div>
-    </BrowserRouter>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+          <Footer />
+        </div>
+      </BrowserRouter>
+    </ErrorBoundary>
   );
 }
 

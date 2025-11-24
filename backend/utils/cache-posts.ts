@@ -7,12 +7,18 @@ function isRedisEnabled() {
 }
 
 export async function retrieveDataFromCache(key: any) {
-  if (!isRedisEnabled()) return null; // Skip cache if Redis is not available
+  if (!isRedisEnabled()) return null;
 
-  const cacheKey = `${REDIS_PREFIX}:${key}`;
-  const cachedData = await getRedisClient().get(cacheKey);
-  if (cachedData) {
-    return JSON.parse(cachedData);
+  try {
+    const client = getRedisClient();
+    if (!client) return null;
+
+    const data = await client.get(`${REDIS_PREFIX}:${key}`);
+    if (data) {
+      return JSON.parse(data);
+    }
+  } catch (error) {
+    return null;
   }
   return null;
 }

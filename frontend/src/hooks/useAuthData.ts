@@ -15,26 +15,49 @@ const useAuthData = (): AuthData => {
     loading: true,
   });
 
+  // Sync with userState changes
   useEffect(() => {
+    const currentUser = userState.getUser();
     setData({
-      ...data,
+      _id: currentUser?._id || '',
+      role: currentUser?.role || '',
       token: '',
+      loading: true,
     });
   }, [user?._id]);
 
   useEffect(() => {
     async function fetchToken() {
-      try {
-        const res = await axiosInstance.get(`/api/auth/check/${data._id}`);
+      const currentUser = userState.getUser();
+
+      // Only fetch token if user ID exists
+      if (!currentUser?._id) {
         setData({
-          ...data,
+          _id: '',
+          role: '',
+          token: '',
+          loading: false,
+        });
+        return;
+      }
+
+      try {
+        const res = await axiosInstance.get(`/api/auth/check/${currentUser._id}`);
+        setData({
+          _id: currentUser._id,
+          role: currentUser.role,
           token: res.data?.data,
           loading: false,
         });
-      } catch (error) {
-        console.error('Error fetching token:', error);
+      } catch (error: any) {
+        // If authentication fails (401/400), clear the invalid user data
+        if (error.response?.status === 401 || error.response?.status === 400) {
+          userState.removeUser();
+        }
+
         setData({
-          ...data,
+          _id: '',
+          role: '',
           token: '',
           loading: false,
         });

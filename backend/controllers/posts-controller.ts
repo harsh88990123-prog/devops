@@ -47,12 +47,17 @@ export const createPostHandler = async (req: Request, res: Response) => {
       authorId: req.user._id,
     });
 
-    const [savedPost] = await Promise.all([
-      post.save(), // Save the post
-      deleteDataFromCache(REDIS_KEYS.ALL_POSTS), // Invalidate cache for all posts
-      deleteDataFromCache(REDIS_KEYS.FEATURED_POSTS), // Invalidate cache for featured posts
-      deleteDataFromCache(REDIS_KEYS.LATEST_POSTS), // Invalidate cache for latest posts
-    ]);
+    const savedPost = await post.save();
+
+    try {
+      await Promise.all([
+        deleteDataFromCache(REDIS_KEYS.ALL_POSTS), // Invalidate cache for all posts
+        deleteDataFromCache(REDIS_KEYS.FEATURED_POSTS), // Invalidate cache for featured posts
+        deleteDataFromCache(REDIS_KEYS.LATEST_POSTS), // Invalidate cache for latest posts
+      ]);
+    } catch (error) {
+      console.error('Failed to invalidate cache:', error);
+    }
 
     // updating user doc to include the ObjectId of the created post
     await User.findByIdAndUpdate(userId, { $push: { posts: savedPost._id } });

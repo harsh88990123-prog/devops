@@ -1,10 +1,18 @@
 import mongoose from 'mongoose';
 import request from 'supertest';
 import Post from '../../../models/post.js';
-import server from '../../../server.js';
+import app from '../../../app.js';
+import connectDB from '../../../config/db.js';
+import { connectToRedis } from '../../../services/redis.js';
 import { validCategories, HTTP_STATUS, RESPONSE_MESSAGES } from '../../../utils/constants.js';
 import { createPostObject } from '../../utils/helper-objects.js';
-import { expect, jest, it, afterAll, describe } from '@jest/globals';
+import { expect, jest, it, afterAll, beforeAll, describe } from '@jest/globals';
+
+beforeAll(async () => {
+  await connectToRedis();
+  await connectDB();
+});
+
 afterAll(async () => {
   await mongoose.disconnect();
 });
@@ -13,7 +21,7 @@ let postId: any;
 const invalidPostId = '609c16c69405b14574c99999';
 describe('Integration Tests: Post creation', () => {
   it('Post creation: Success - All fields are valid', async () => {
-    const response = await request(server).post('/api/posts').send(createPostObject());
+    const response = await request(app).post('/api/posts').send(createPostObject());
     postId = response.body._id;
     const fetchedPost = await Post.findById(postId);
 
@@ -26,7 +34,7 @@ describe('Integration Tests: Post creation', () => {
   it('Post creation: Failure - Missing required fields', async () => {
     const postObject = createPostObject();
     delete postObject.title;
-    const response = await request(server).post('/api/posts').send(postObject);
+    const response = await request(app).post('/api/posts').send(postObject);
 
     expect(JSON.parse(response.text)).toEqual({
       message: RESPONSE_MESSAGES.COMMON.REQUIRED_FIELDS,
@@ -38,7 +46,7 @@ describe('Integration Tests: Post creation', () => {
     const postObject = createPostObject({
       categories: [validCategories[0], validCategories[1], validCategories[2], validCategories[3]],
     });
-    const response = await request(server).post('/api/posts').send(postObject);
+    const response = await request(app).post('/api/posts').send(postObject);
 
     expect(JSON.parse(response.text)).toEqual({
       message: RESPONSE_MESSAGES.POSTS.MAX_CATEGORIES,
@@ -50,7 +58,7 @@ describe('Integration Tests: Post creation', () => {
     const postObject = createPostObject({
       imageLink: 'https://www.invalid-image.gif',
     });
-    const response = await request(server).post('/api/posts').send(postObject);
+    const response = await request(app).post('/api/posts').send(postObject);
 
     expect(JSON.parse(response.text)).toEqual({
       message: RESPONSE_MESSAGES.POSTS.INVALID_IMAGE_URL,
@@ -65,7 +73,7 @@ describe('Integration Tests: Post creation', () => {
       .mockRejectedValueOnce(new Error(RESPONSE_MESSAGES.COMMON.INTERNAL_SERVER_ERROR));
 
     const postObject = createPostObject();
-    const response = await request(server).post('/api/posts').send(postObject);
+    const response = await request(app).post('/api/posts').send(postObject);
 
     expect(response.status).toBe(HTTP_STATUS.INTERNAL_SERVER_ERROR);
     expect(JSON.parse(response.text)).toEqual({
@@ -75,7 +83,7 @@ describe('Integration Tests: Post creation', () => {
 });
 describe('Integration Tests: Get all posts', () => {
   it('Get all posts: Success', async () => {
-    const response = await request(server).get('/api/posts');
+    const response = await request(app).get('/api/posts');
 
     expect(response.status).toBe(HTTP_STATUS.OK);
     expect(response.body).toBeInstanceOf(Array);
@@ -84,7 +92,7 @@ describe('Integration Tests: Get all posts', () => {
 describe('Integration Tests: Get all posts by category', () => {
   it('Get all posts by category: Success', async () => {
     const category = validCategories[0];
-    const response = await request(server).get(`/api/posts/categories/${category}`);
+    const response = await request(app).get(`/api/posts/categories/${category}`);
 
     expect(response.status).toBe(HTTP_STATUS.OK);
     expect(response.body).toBeInstanceOf(Array);
@@ -92,7 +100,7 @@ describe('Integration Tests: Get all posts by category', () => {
 
   it('Get all posts by category: Failure - Invalid category', async () => {
     const category = 'invalid-category';
-    const response = await request(server).get(`/api/posts/categories/${category}`);
+    const response = await request(app).get(`/api/posts/categories/${category}`);
 
     expect(response.status).toBe(HTTP_STATUS.BAD_REQUEST);
     expect(JSON.parse(response.text)).toEqual({
@@ -102,7 +110,7 @@ describe('Integration Tests: Get all posts by category', () => {
 });
 describe('Integration Tests: Get all featured posts', () => {
   it('Get all featured posts: Success', async () => {
-    const responseFeatured = await request(server).get('/api/posts/featured');
+    const responseFeatured = await request(app).get('/api/posts/featured');
 
     expect(responseFeatured.status).toBe(HTTP_STATUS.OK);
     expect(responseFeatured.body.length).toBeGreaterThan(1);
@@ -110,7 +118,7 @@ describe('Integration Tests: Get all featured posts', () => {
 });
 describe('Integration Tests: Get all latest posts', () => {
   it('Get all latest posts: Success', async () => {
-    const responseLatest = await request(server).get('/api/posts/latest');
+    const responseLatest = await request(app).get('/api/posts/latest');
 
     expect(responseLatest.status).toBe(HTTP_STATUS.OK);
     expect(responseLatest.body.length).toBeGreaterThan(1);
@@ -120,7 +128,7 @@ describe('Integration Tests: Update Post', () => {
   it('Update Post: Success - Update Post of existing ID', async () => {
     let updatedPost;
 
-    const response = await request(server)
+    const response = await request(app)
       .patch(`/api/posts/${postId}`)
       .send(createPostObject({ title: 'Updated Post' }));
     updatedPost = await Post.findById(postId);
@@ -131,7 +139,7 @@ describe('Integration Tests: Update Post', () => {
   });
 
   it('Update Post: Failure - Invalid post ID', async () => {
-    const response = await request(server)
+    const response = await request(app)
       .patch(`/api/posts/${invalidPostId}`)
       .send(createPostObject({ title: 'Updated Post' }));
 
@@ -145,7 +153,7 @@ describe('Integration Tests: Delete Post', () => {
   it('Delete Post: Success - Removing Post with specific ID', async () => {
     let deletedPost;
 
-    const response = await request(server).delete(`/api/posts/${postId}`);
+    const response = await request(app).delete(`/api/posts/${postId}`);
 
     deletedPost = await Post.findById(postId);
 
@@ -155,7 +163,7 @@ describe('Integration Tests: Delete Post', () => {
   });
 
   it('Delete Post: Failure - Invalid post ID', async () => {
-    const response = await request(server).delete(`/api/posts/${invalidPostId}`);
+    const response = await request(app).delete(`/api/posts/${invalidPostId}`);
 
     expect(response.status).toBe(HTTP_STATUS.NOT_FOUND);
     expect(JSON.parse(response.text)).toEqual({
