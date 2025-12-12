@@ -1,0 +1,59 @@
+
+> frontend@0.0.0 dev
+> vite --host
+
+
+  VITE v4.5.14  ready in 379 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: http://172.31.41.140:5173/
+
+> frontend@0.0.0 dev
+> vite --host
+
+Port 5173 is in use, trying another one...
+
+  VITE v4.5.14  ready in 401 ms
+
+  ➜  Local:   http://localhost:5174/
+  ➜  Network: http://172.31.41.140:5174/
+npm ERR! Missing script: "start"
+npm ERR! 
+npm ERR! Did you mean one of these?
+npm ERR!     npm star # Mark your favorite packages
+npm ERR!     npm stars # View packages marked as favorites
+npm ERR! 
+npm ERR! To see a list of scripts, run:
+npm ERR!   npm run
+
+npm ERR! A complete log of this run can be found in: /home/ubuntu/.npm/_logs/2025-12-12T06_52_57_373Z-debug-0.log
+npm ERR! Missing script: "start"
+npm ERR! 
+npm ERR! Did you mean one of these?
+npm ERR!     npm star # Mark your favorite packages
+npm ERR!     npm stars # View packages marked as favorites
+npm ERR! 
+npm ERR! To see a list of scripts, run:
+npm ERR!   npm run
+
+npm ERR! A complete log of this run can be found in: /home/ubuntu/.npm/_logs/2025-12-12T06_53_03_217Z-debug-0.log
+npm ERR! Missing script: "start"
+npm ERR! 
+npm ERR! Did you mean one of these?
+npm ERR!     npm star # Mark your favorite packages
+npm ERR!     npm stars # View packages marked as favorites
+npm ERR! 
+npm ERR! To see a list of scripts, run:
+npm ERR!   npm run
+
+npm ERR! A complete log of this run can be found in: /home/ubuntu/.npm/_logs/2025-12-12T06_53_12_600Z-debug-0.log
+
+> frontend@0.0.0 dev
+> vite --host
+
+Port 5173 is in use, trying another one...
+
+  VITE v4.5.14  ready in 403 ms
+
+  ➜  Local:   http://localhost:5174/
+  ➜  Network: http://172.31.41.140:5174/
