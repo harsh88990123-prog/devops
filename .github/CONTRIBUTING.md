@@ -46,7 +46,7 @@ To setup the project locally follow the steps:
 3. Download the required dependencies
    ```bash
    cd wanderlust
-   npm run installer
+   first install npm then run npm run installer
    ```
 
 4. Set up your databases
