@@ -15,7 +15,7 @@ const app = express();
 app.use(
   cors({
     // added origin
-    origin: [FRONTEND_URL as string, 'http://localhost:3000'],
+    origin: [FRONTEND_URL as string, 'http://localhost:3000', 'http://34.215.193.69:5173'],
     credentials: true,
   })
 );
