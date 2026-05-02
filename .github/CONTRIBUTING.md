@@ -43,13 +43,50 @@ To setup the project locally follow the steps:
    git clone https://github.com/YOUR-USERNAME/wanderlust.git
    ```
 
-3. Download the required dependencies
+3.  install npm in /frontend & /backend folder
+    # Download and install nvm:
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.4/install.sh | bash
+    # in lieu of restarting the shell
+    \. "$HOME/.nvm/nvm.sh"
+    # Download and install Node.js:
+    nvm install 24
+    # Verify the Node.js version:
+    node -v # Should print "v24.15.0".
+    # Verify npm version:
+    npm -v # Should print "11.12.1". 
+
+4. Then we start npm in /backend
+    nmp i
+# Then we copy in backend folder 
+    cp .env.sample .env
+
+    Then we statrt npm in /frontend
+    npm run dev -- --host
+
+# Then copy in frontend folder 
+    cp .env.local .env
+ 
+
+5.  Use pm2 for run frontent & backend in the backgroud process so it will not affact work
+    # install pm2
+    sudo npm install -g pm2
+    # check status 
+    pm2 status
+    # To stop the process 
+    pm2 stop <id or name>
+    # To restart the process 
+    pm2 restart <id or name>
+    #To make pm2 start your app automatically on system reboots
+    pm2 startup
+    pm2 save
+
+6. Download the required dependencies
    ```bash
    cd wanderlust
    npm run installer
    ```
 
-4. Set up your databases
+7. Set up your databases
    - Make sure you install [ mongodb](https://www.mongodb.com/docs/manual/installation/) and run it on port `27017`
 
      **Option 1: mongoimport**
@@ -62,15 +99,15 @@ To setup the project locally follow the steps:
      - Create a new collection named `posts` in the `wanderlust` db
      - Use **ADD DATA** option in the `posts` collection and use the content from `backend/data/sample_posts.json` file
 
-5. Set up Redis
+8. Set up Redis
    - Make sure you [install redis](https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/) and run it in `redis://127.0.0.1:6379`
 
-6. Set up env variables
+9. Set up env variables
    ```bash
    cp backend/.env.sample backend/.env && cp frontend/.env.sample frontend/.env.local
    ```
 
-7. Launch the development server with `npm start` in the root directory of the repository.
+10. Launch the development server with `npm start` in the root directory of the repository.
 
 <a name="request-for-changes-pull-requests"></a>
 
