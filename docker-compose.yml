@@ -1,0 +1,44 @@
+version: "3.8"
+
+services:
+  mongo:
+    image: mongo
+    container_name: mongodb
+    volumes:
+      - ./backend/data:/data/db
+    networks:
+      - app-network
+
+  redis:
+    image: redis:7
+    container_name: redis
+    networks:
+      - app-network
+
+  backend:
+    container_name: backend
+    build: ./backend
+    env_file:
+      - ./backend/.env.sample
+    ports:
+      - "5173:5173"
+    depends_on:
+      - mongo
+      - redis
+    networks:
+      - app-network
+
+  frontend:
+    container_name: frontend
+    build: ./frontend
+    ports:
+      - "8080:8080"
+    networks:
+      - app-network
+
+volumes:
+  data:
+
+networks:
+  app-network:
+    driver: bridge
