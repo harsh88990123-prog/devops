@@ -22,6 +22,7 @@ function header() {
   const handleLogout = async () => {
     try {
       const response = axiosInstance.post('/api/auth/signout');
+
       toast.promise(response, {
         pending: 'Wait ...',
         success: {
@@ -55,21 +56,36 @@ function header() {
 
   return (
     <div className="relative -mt-2 h-[460px] bg-[url('./assets/wanderlustbg.webp')] bg-cover bg-fixed bg-center">
-      <div className="absolute inset-0 bg-black opacity-50"></div>
+      {/* Improved overlay */}
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-[1px]"></div>
+
       <div className="absolute inset-0 flex flex-col px-8 py-8 text-slate-50 sm:px-16">
         <div className="flex w-full justify-between">
+          {/* Logo Section */}
           <div className="flex cursor-text items-center justify-between gap-2 text-2xl font-semibold">
             <Link to="/">
-              <img src={AppIcon} className="h-10 w-10" />
+              <img
+                src={AppIcon}
+                alt="WanderLust Logo"
+                className="h-10 w-10 transition-transform duration-200 hover:scale-110"
+              />
             </Link>
-            <Link to="/" style={{ textDecoration: 'none' }}>
+
+            <Link
+              to="/"
+              style={{ textDecoration: 'none' }}
+              className="transition-colors duration-200 hover:text-slate-300"
+            >
               WanderLust
             </Link>
           </div>
+
+          {/* Right Side Controls */}
           <div className="flex items-center justify-between">
             <div className="flex items-center justify-end px-4 sm:px-20">
               <ThemeToggle />
             </div>
+
             <div>
               {loading ? (
                 <Loader />
@@ -77,7 +93,7 @@ function header() {
                 <div className="flex gap-2">
                   {user?.role === Role.Admin && (
                     <button
-                      className="active:scale-click hidden rounded border border-slate-50 px-4 py-2 hover:bg-slate-500/25 md:inline-block"
+                      className="active:scale-click hidden rounded border border-slate-50 px-4 py-2 transition-all duration-200 hover:scale-105 hover:bg-slate-500/25 md:inline-block"
                       onClick={() => {
                         navigate('/admin/blogs');
                       }}
@@ -87,31 +103,36 @@ function header() {
                   )}
 
                   <button
-                    className="active:scale-click hidden rounded border border-slate-50 px-4 py-2 hover:bg-slate-500/25 md:inline-block"
+                    className="active:scale-click hidden rounded border border-slate-50 px-4 py-2 transition-all duration-200 hover:scale-105 hover:bg-slate-500/25 md:inline-block"
                     onClick={() => {
                       navigate('/add-blog');
                     }}
                   >
                     Create post
                   </button>
+
                   <button
-                    className="active:scale-click hidden rounded border border-slate-50 px-4 py-2 hover:bg-slate-500/25 md:inline-block"
+                    className="active:scale-click hidden rounded border border-slate-50 px-4 py-2 transition-all duration-200 hover:scale-105 hover:bg-slate-500/25 md:inline-block"
                     onClick={() => {
                       handleLogout();
                     }}
                   >
                     Logout
                   </button>
+
+                  {/* Mobile Add Button */}
                   <button
-                    className="px-2 py-2 hover:bg-slate-500/25 md:hidden"
+                    className="rounded-full p-2 transition-all duration-200 hover:scale-110 hover:bg-slate-500/25 md:hidden"
                     onClick={() => {
                       navigate('/add-blog');
                     }}
                   >
                     <img className="h-10 w-10" src={AddIcon} alt="Add Icon" />
                   </button>
+
+                  {/* Mobile Logout Button */}
                   <button
-                    className="py-2 hover:bg-slate-500/25 md:hidden md:px-2"
+                    className="rounded-full p-2 transition-all duration-200 hover:scale-110 hover:bg-slate-500/25 md:hidden"
                     onClick={() => {
                       handleLogout();
                     }}
@@ -121,17 +142,18 @@ function header() {
                 </div>
               ) : (
                 <div className="flex">
-                  {' '}
                   <button
-                    className="active:scale-click hidden rounded border border-slate-50 px-4 py-2 hover:bg-slate-500/25 md:inline-block"
+                    className="active:scale-click hidden rounded border border-slate-50 px-4 py-2 transition-all duration-200 hover:scale-105 hover:bg-slate-500/25 md:inline-block"
                     onClick={() => {
                       navigate('/signin');
                     }}
                   >
                     Login
                   </button>
+
+                  {/* Mobile Login Button */}
                   <button
-                    className="py-2 hover:bg-slate-500/25 md:hidden md:px-2"
+                    className="rounded-full p-2 transition-all duration-200 hover:scale-110 hover:bg-slate-500/25 md:hidden"
                     onClick={() => {
                       navigate('/signin');
                     }}
@@ -143,6 +165,7 @@ function header() {
             </div>
           </div>
         </div>
+
         <Hero />
       </div>
     </div>
