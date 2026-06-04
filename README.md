@@ -113,7 +113,8 @@ Feel free to get in touch with me for any further queries or support, happy to h
  <!-- Cotributors -->
 <div>
   <h2><img src="https://github.com/Meetjain1/wanderlust/assets/133582566/20610b38-b287-4bf0-8f28-932b9c76163d" width="40" height="40"> Contributors</h2>
-</div>
+/div>
+
 
 We extend our heartfelt gratitude for your invaluable contribution to our project! Your efforts play a pivotal role in elevating Wanderlust to greater heights. 😊
 
