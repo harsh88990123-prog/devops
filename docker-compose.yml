@@ -1,0 +1,35 @@
+
+services:
+  mongodb:
+    container_name: mongo
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+      - ./backend/data/sample_posts.json:/docker-entrypoint-initdb.d/sample_posts.json
+    environment:
+      - MONGO_INITDB_DATABASE=wanderlust
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
+  backend:
+    container_name: backend
+    build:  ./backend
+    env_file: 
+      - ./backend/.env.sample
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongodb
+  frontend:
+    container_name: frontend
+    build:  ./frontend
+    env_file:
+      - ./frontend/.env.sample
+    ports:
+      - "5173:5173"
+volumes:
+  mongo-data:
