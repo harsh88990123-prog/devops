@@ -6,6 +6,9 @@ COPY . .
 
 RUN npm install --ignore-scripts
 
+RUN npm run test
+
+
 COPY .env.sample .env.local
 
 EXPOSE 5173
