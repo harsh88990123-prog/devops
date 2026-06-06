@@ -4,7 +4,9 @@ WORKDIR /app
 
 COPY . . 
 
-RUN npm i
+RUN npm i'
+
+RUN npm run test
 
 COPY .env.sample .env
 
