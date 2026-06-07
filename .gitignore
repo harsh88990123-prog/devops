@@ -7,3 +7,41 @@ coverage/
 .idea/
 backend/dist
 package-lock.json
+
+
+# Terraform local directories and state files
+.terraform/
+*.tfstate
+*.tfstate.backup
+.terraform.lock.hcl
+
+# Crash logs
+crash.log
+crash.*.log
+
+# Local override files (can contain sensitive data)
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Ignore sensitive variable files
+terraform.tfvars
+*.auto.tfvars
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# IDE / Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Ignore private and public key files
+
+terra-key
+terra-key.pub
+*.pem
+*.key
