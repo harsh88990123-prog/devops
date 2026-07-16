@@ -1,0 +1,56 @@
+services:
+  mongodb:
+    image: mongo:7
+    container_name: mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+
+  backend:
+    build:
+      context: ./backend
+    container_name: backend
+    depends_on:
+      - mongodb
+      - redis
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      NODE_ENV: development
+      MONGODB_URI: mongodb://mongodb:27017/wanderlust
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: my-super-secret-key
+      ACCESS_TOKEN_EXPIRES_IN: 15m
+      REFRESH_TOKEN_EXPIRES_IN: 7d
+      ACCESS_COOKIE_MAXAGE: 900000
+      REFRESH_COOKIE_MAXAGE: 604800000
+      FRONTEND_URL: http://localhost:5173
+      BACKEND_URL: http://localhost:3000
+      GOOGLE_CLIENT_ID: dummy-client-id
+      GOOGLE_CLIENT_SECRET: dummy-client-secret
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: frontend
+    depends_on:
+      - backend
+    ports:
+      - "5173:80"
+    environment:
+      VITE_API_PATH: http://backend:3000
+    restart: unless-stopped
+
+volumes:
+  mongodb_data:
